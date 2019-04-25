@@ -111,10 +111,7 @@ public class KonsentusEIDASRule extends AsyncRuleInterceptorBase<KonsentusEIDASR
 				scopes = requestBody.get("scope").asText();
 			}
 			logger.info("Requested scopes: {}", scopes);
-		/*	if (!(scopes.contains(PAYMENTS_SCOPE) || scopes.contains(ACCOUNTS_SCOPE))) {
-				logger.info("No Open Banking scopes requested");
-				return CompletableFuture.completedFuture(Outcome.CONTINUE);
-			} */
+
 			return sendKonsentusRequest(this.getHttpClient(), this.getConfiguration().getKonsentusService(), Base64.getEncoder().encodeToString(cert.getEncoded()), scopes);
 			 
 		} catch (CertificateEncodingException | AccessException | IOException e) {
@@ -126,7 +123,7 @@ public class KonsentusEIDASRule extends AsyncRuleInterceptorBase<KonsentusEIDASR
 
 	
 	private CompletionStage<Outcome> sendKonsentusRequest(HttpClient httpClient,
-            ThirdPartyServiceModel model, String certificate, String scopes)
+            ThirdPartyServiceModel model, String certificate, final String  scopes)
 	{
 		Headers headers = ClientRequest.createHeaders();
 		headers.setAccept(Collections.singletonList("application/json"));
