@@ -105,10 +105,13 @@ public class KonsentusEIDASRule extends AsyncRuleInterceptorBase<KonsentusEIDASR
 			 body.read(); 
 			 if (exchange.getRequest().getHeaders().getContentType().toString().equals("application/x-www-form-urlencoded")) {
 				 Map<String, String[]> formParams = body.parseFormParams();
-				 scopes = formParams.get("scope")[0];
+				 if (formParams.get("scope") != null && formParams.get("scope").length > 0)
+					 scopes = formParams.get("scope")[0];
 			} else  if (exchange.getRequest().getHeaders().getContentType().toString().equals("application/json")) {
 				JsonNode requestBody = objectMapper.readTree(body.getContent());
-				scopes = requestBody.get("scope").asText();
+				if (requestBody.get("scope") != null)
+					scopes = requestBody.get("scope").asText();
+				
 			}
 			logger.info("Requested scopes: {}", scopes);
 
